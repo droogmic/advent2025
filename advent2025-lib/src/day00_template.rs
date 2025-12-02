@@ -18,8 +18,8 @@ pub fn part2(_something: &Something) -> PartOutput<usize> {
 pub const DAY: Day<Something, usize, 1, 0, 0> = Day {
     title: "TITLE",
     display: (
-        "Foobar foobar foobar {answer}.",
-        "Foobar foobar foobar {answer}.",
+        "Foobar foobar foobar: {answer}",
+        "Foobar foobar foobar: {answer}",
     ),
     calc: DayCalc {
         parse,
@@ -34,20 +34,20 @@ mod tests {
     use test_log::test;
 
     use super::*;
-    use crate::Printable as _;
+    use crate::{Printable as _, get_input};
 
     #[test]
     fn test_example_part1() {
         let something = parse(DAY.examples().first()).unwrap();
         let result = part1(&something);
-        assert_eq!(result, -1);
+        assert_eq!(result.val(), -1);
     }
 
     #[test]
     fn test_example_part2() {
         let something = parse(DAY.examples().second()).unwrap();
         let result = part2(&something);
-        assert_eq!(result, -1);
+        assert_eq!(result.val(), -1);
     }
 
     #[test]

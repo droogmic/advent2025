@@ -7,9 +7,21 @@ use std::rc::Rc;
 
 use strum::ParseError as StrumParseError;
 
-mod day01;
 pub mod parser;
-mod test;
+// mod test;
+
+mod day01;
+mod day02;
+// mod day03;
+// mod day04;
+// mod day05;
+// mod day06;
+// mod day07;
+// mod day08;
+// mod day09;
+// mod day10;
+// mod day11;
+// mod day12;
 
 #[derive(Debug, Clone, Copy)]
 pub enum Part {
@@ -208,9 +220,21 @@ impl<D: 'static, O: 'static + std::fmt::Display, const C: usize, const F: usize,
 pub fn get_days() -> BTreeMap<usize, Box<dyn DayTrait + 'static>> {
     let mut days: BTreeMap<usize, Box<dyn DayTrait + 'static>> = BTreeMap::new();
     days.insert(1, Box::new(day01::DAY));
+    days.insert(2, Box::new(day02::DAY));
+    // days.insert(3, Box::new(day03::DAY));
+    // days.insert(4, Box::new(day04::DAY));
+    // days.insert(5, Box::new(day05::DAY));
+    // days.insert(6, Box::new(day06::DAY));
+    // days.insert(7, Box::new(day07::DAY));
+    // days.insert(8, Box::new(day08::DAY));
+    // days.insert(9, Box::new(day09::DAY));
+    // days.insert(10, Box::new(day10::DAY));
+    // days.insert(11, Box::new(day11::DAY));
+    // days.insert(12, Box::new(day12::DAY));
     days
 }
 
+/// Reads the input file for the given day.
 pub fn get_input(day: usize) -> String {
     match fs::read_to_string(format!("inputs/day{:02}.txt", day))
         .or_else(|_| fs::read_to_string(format!("../inputs/day{:02}.txt", day)))

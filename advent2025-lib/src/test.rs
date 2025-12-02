@@ -4,7 +4,7 @@ mod tests {
 
     use crate::{Part, PrimaryExample, get_days};
 
-    const EXAMPLE_ANSWERS: [[&'static str; 2]; 1] = [["3", "6"]];
+    const EXAMPLE_ANSWERS: [[&'static str; 2]; 1] = [["3", "6"], []];
 
     #[test]
     fn test_days_examples() {

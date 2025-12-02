@@ -144,7 +144,7 @@ mod tests {
     use test_log::test;
 
     use super::*;
-    use crate::Printable as _;
+    use crate::{Printable as _, get_input};
 
     #[test]
     fn test_example_part1() {
@@ -164,10 +164,10 @@ mod tests {
         assert_eq!(result.val(), 6);
     }
 
-    // #[test]
-    // fn test_main() {
-    //     let something = parse(&get_input(0)).unwrap();
-    //     assert_eq!(part1(&something).answer.to_string(), "-1");
-    //     assert_eq!(part2(&something).answer.to_string(), "-1");
-    // }
+    #[test]
+    fn test_main() {
+        let something = parse(&get_input(1)).unwrap();
+        assert_eq!(part1(&something).answer.to_string(), "1034");
+        assert_eq!(part2(&something).answer.to_string(), "6166");
+    }
 }
