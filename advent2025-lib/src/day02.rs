@@ -153,14 +153,14 @@ mod tests {
     fn test_example_part1() {
         let ranges = parse(DAY.examples().first()).unwrap();
         let result = part1(&ranges);
-        assert_eq!(result.val(), 1227775554);
+        assert_eq!(result.unwrap(), 1227775554);
     }
 
     #[test]
     fn test_example_part2() {
         let ranges = parse(DAY.examples().second()).unwrap();
         let result = part2(&ranges);
-        assert_eq!(result.val(), 4174379265);
+        assert_eq!(result.unwrap(), 4174379265);
     }
 
     #[test]

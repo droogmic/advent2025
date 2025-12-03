@@ -70,7 +70,7 @@ pub struct PartOutput<O> {
 }
 
 impl<O: Clone> PartOutput<O> {
-    pub fn val(&self) -> O {
+    pub fn unwrap(&self) -> O {
         self.answer.clone()
     }
 }

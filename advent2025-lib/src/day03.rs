@@ -1,19 +1,55 @@
 use crate::{Day, DayCalc, Examples, ParseError, ParseResult, PartOutput};
-use std::str::FromStr;
+use std::{fmt::Display, iter::Sum, str::FromStr};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct Joltage(u8);
+pub struct Joltage(usize);
+
+impl Sum for Joltage {
+    fn sum<I: Iterator<Item = Self>>(iter: I) -> Self {
+        iter.fold(Joltage(0), |acc, item| Joltage(acc.0 + item.0))
+    }
+}
+
+impl Display for Joltage {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct JoltageRating(u8);
+
+impl JoltageRating {
+    fn as_int(&self) -> usize {
+        self.0.into()
+    }
+}
 
 #[derive(Debug, Clone)]
-pub struct BatteryBank(Vec<Joltage>);
+pub struct BatteryBank(Vec<JoltageRating>);
+
+impl BatteryBank {
+    fn joltage(&self) -> Joltage {
+        Joltage(
+            self.0
+                .iter()
+                .rev()
+                .enumerate()
+                .fold(0usize, |acc, (power, part)| {
+                    acc.checked_add(part.as_int() * 10usize.pow(power.try_into().unwrap()))
+                        .unwrap()
+                }),
+        )
+    }
+}
 
 impl FromStr for BatteryBank {
     type Err = ParseError;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Ok(BatteryBank(
             s.chars()
-                .map(|c| c.to_string().parse().map(Joltage))
-                .collect::<Result<Vec<Joltage>, _>>()?,
+                .map(|c| c.to_string().parse().map(JoltageRating))
+                .collect::<Result<Vec<JoltageRating>, _>>()?,
         ))
     }
 }
@@ -36,42 +72,18 @@ pub fn parse(input: &str) -> ParseResult<BatteryBanks> {
     BatteryBanks::from_str(input)
 }
 
-pub fn part1(banks: &BatteryBanks) -> PartOutput<usize> {
-    let retval: usize = banks
-        .0
-        .iter()
-        .map(|bank| {
-            let mut first = Joltage(0);
-            let mut second = Joltage(0);
-            for joltage in bank.0.iter().rev().skip(1).rev() {
-                if joltage.0 > first.0 {
-                    first = *joltage;
-                    second = Joltage(0)
-                } else if joltage.0 > second.0 {
-                    second = *joltage;
-                }
-            }
-            if bank.0.last().unwrap().0 > second.0 {
-                second = *bank.0.last().unwrap();
-            }
-            10 * usize::from(first.0) + usize::from(second.0)
-        })
-        .sum();
-    PartOutput { answer: retval }
-}
-
-pub fn part2(banks: &BatteryBanks) -> PartOutput<usize> {
-    let retval = banks
+fn largest_joltage(banks: &BatteryBanks, battery_count: usize) -> Joltage {
+    banks
         .0
         .iter()
         .map(|bank| {
             let mut max_bank = BatteryBank(
-                vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                vec![0; battery_count]
                     .into_iter()
-                    .map(Joltage)
+                    .map(JoltageRating)
                     .collect(),
             );
-            for joltage_window in bank.0.windows(12) {
+            for joltage_window in bank.0.windows(battery_count) {
                 let mut new_set = false;
                 for (idx, joltage) in joltage_window.iter().enumerate() {
                     if new_set {
@@ -82,25 +94,30 @@ pub fn part2(banks: &BatteryBanks) -> PartOutput<usize> {
                     }
                 }
             }
-            let mut s = String::new();
-            for j in max_bank.0 {
-                let c = j.0.to_string();
-                assert!(c.len() == 1);
-                s.push_str(c.as_str())
-            }
-            let final_joltage: usize = s.parse().unwrap();
-            log::info!("{:?}", final_joltage);
-            final_joltage
+            let bank_joltage: Joltage = max_bank.joltage();
+            log::info!("Bank Joltage: {bank_joltage:?}");
+            bank_joltage
         })
-        .sum();
-    PartOutput { answer: retval }
+        .sum()
 }
 
-pub const DAY: Day<BatteryBanks, usize, 1, 0, 0> = Day {
+pub fn part1(banks: &BatteryBanks) -> PartOutput<Joltage> {
+    PartOutput {
+        answer: largest_joltage(banks, 2),
+    }
+}
+
+pub fn part2(banks: &BatteryBanks) -> PartOutput<Joltage> {
+    PartOutput {
+        answer: largest_joltage(banks, 12),
+    }
+}
+
+pub const DAY: Day<BatteryBanks, Joltage, 1, 0, 0> = Day {
     title: "TITLE",
     display: (
-        "Foobar foobar foobar: {answer}",
-        "Foobar foobar foobar: {answer}",
+        "The total output joltage is: {answer}",
+        "The new output joltage is: {answer}",
     ),
     calc: DayCalc {
         parse,
@@ -121,14 +138,14 @@ mod tests {
     fn test_example_part1() {
         let banks = parse(DAY.examples().first()).unwrap();
         let result = part1(&banks);
-        assert_eq!(result.val(), 357);
+        assert_eq!(result.unwrap(), Joltage(357));
     }
 
     #[test]
     fn test_example_part2() {
         let banks = parse(DAY.examples().second()).unwrap();
         let result = part2(&banks);
-        assert_eq!(result.val(), 3121910778619);
+        assert_eq!(result.unwrap(), Joltage(3121910778619));
     }
 
     #[test]

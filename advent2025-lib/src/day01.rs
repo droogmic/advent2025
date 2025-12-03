@@ -154,14 +154,14 @@ mod tests {
         }
         log::info!("Sequence: {:?}", rotations.sequence(50));
         let result = part1(&rotations);
-        assert_eq!(result.val(), 3);
+        assert_eq!(result.unwrap(), 3);
     }
 
     #[test]
     fn test_example_part2() {
         let something = parse(DAY.examples().second()).unwrap();
         let result = part2(&something);
-        assert_eq!(result.val(), 6);
+        assert_eq!(result.unwrap(), 6);
     }
 
     #[test]
