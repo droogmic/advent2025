@@ -19,27 +19,20 @@ impl Display for Joltage {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct JoltageRating(u8);
 
-impl JoltageRating {
-    fn as_int(&self) -> usize {
-        self.0.into()
-    }
-}
-
 #[derive(Debug, Clone)]
 pub struct BatteryBank(Vec<JoltageRating>);
 
 impl BatteryBank {
     fn joltage(&self) -> Joltage {
-        Joltage(
-            self.0
-                .iter()
-                .rev()
-                .enumerate()
-                .fold(0usize, |acc, (power, part)| {
-                    acc.checked_add(part.as_int() * 10usize.pow(power.try_into().unwrap()))
-                        .unwrap()
-                }),
-        )
+        Joltage(self.0.iter().rev().enumerate().fold(
+            0usize,
+            |acc, (rating_index, joltage_rating)| {
+                acc.checked_add(
+                    usize::from(joltage_rating.0) * 10usize.pow(rating_index.try_into().unwrap()),
+                )
+                .unwrap()
+            },
+        ))
     }
 }
 
