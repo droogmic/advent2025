@@ -10,6 +10,7 @@ use strum::ParseError as StrumParseError;
 pub mod parser;
 // mod test;
 
+mod day00_template;
 mod day01;
 mod day02;
 mod day03;
@@ -219,6 +220,7 @@ impl<D: 'static, O: 'static + std::fmt::Display, const C: usize, const F: usize,
 
 pub fn get_days() -> BTreeMap<usize, Box<dyn DayTrait + 'static>> {
     let mut days: BTreeMap<usize, Box<dyn DayTrait + 'static>> = BTreeMap::new();
+    days.insert(0, Box::new(day00_template::DAY));
     days.insert(1, Box::new(day01::DAY));
     days.insert(2, Box::new(day02::DAY));
     days.insert(3, Box::new(day03::DAY));
