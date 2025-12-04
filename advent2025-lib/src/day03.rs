@@ -107,7 +107,7 @@ pub fn part2(banks: &BatteryBanks) -> PartOutput<Joltage> {
 }
 
 pub const DAY: Day<BatteryBanks, Joltage, 1, 0, 0> = Day {
-    title: "TITLE",
+    title: "Lobby",
     display: (
         "The total output joltage is: {answer}",
         "The new output joltage is: {answer}",

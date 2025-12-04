@@ -1,8 +1,9 @@
+//! Day 0: Template
+//! Find and replace day00_template with dayXX, where XX is the day number.
+//! Find and replace something, Something, line, Line, cell, and Cell.
+
 use std::{collections::HashMap, str::FromStr};
 
-/// Day 0: Template
-/// Find and replace day00_template with dayXX, where XX is the day number.
-/// Find and replace something, Something, line, Line, cell, and Cell.
 use crate::{Day, DayCalc, Examples, ParseError, PartOutput};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
