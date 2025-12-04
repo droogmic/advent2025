@@ -214,7 +214,7 @@ mod tests {
     #[test]
     fn test_main() {
         let parse = DAY.calc.parse;
-        let diagram = parse(&get_input(0)).unwrap();
+        let diagram = parse(&get_input(4)).unwrap();
         assert_eq!(part1(&diagram).answer.to_string(), "1451");
         assert_eq!(part2(&diagram).answer.to_string(), "8701");
     }
