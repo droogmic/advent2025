@@ -2,7 +2,7 @@
 //! Find and replace day00_template with dayXX, where XX is the day number.
 //! Find and replace something, Something, line, Line, cell, and Cell.
 
-use std::{collections::HashMap, str::FromStr};
+use std::{collections::HashMap, fmt::Display, str::FromStr};
 
 use crate::{Day, DayCalc, Examples, ParseError, PartOutput};
 
@@ -14,6 +14,12 @@ pub struct RowColPos {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Cell(char);
+
+impl Display for Cell {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
 
 #[derive(Debug, Clone)]
 pub struct Line(Vec<Cell>);
@@ -29,10 +35,25 @@ impl FromStr for Line {
     }
 }
 
+impl Display for Line {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for cell in &self.0 {
+            write!(f, "{}", cell)?;
+        }
+        Ok(())
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct Something {
     lines: Vec<Line>,
     map: HashMap<RowColPos, Cell>,
+}
+
+impl Something {
+    fn len(&self) -> usize {
+        self.lines.len()
+    }
 }
 
 impl FromStr for Something {
@@ -53,9 +74,18 @@ impl FromStr for Something {
     }
 }
 
+impl Display for Something {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for line in &self.lines {
+            writeln!(f, "{}", line)?;
+        }
+        Ok(())
+    }
+}
+
 pub fn part1(something: &Something) -> PartOutput<usize> {
     PartOutput {
-        answer: something.lines.len(),
+        answer: something.len(),
     }
 }
 
@@ -66,6 +96,7 @@ pub fn part2(something: &Something) -> PartOutput<usize> {
 }
 
 pub const DAY: Day<Something, usize, 1, 0, 0> = Day {
+    day: 0,
     title: "TITLE",
     display: (
         "Foobar foobar foobar: {answer}",
@@ -84,7 +115,8 @@ mod tests {
     use test_log::test;
 
     use super::*;
-    use crate::{Printable as _, get_input};
+    use crate::DayTrait as _;
+    use crate::Printable as _;
 
     #[test]
     fn test_example_part1() {
@@ -105,7 +137,7 @@ mod tests {
     #[test]
     fn test_main() {
         let parse = DAY.calc.parse;
-        let something = parse(&get_input(0)).unwrap();
+        let something = parse(&DAY.input()).unwrap();
         assert_eq!(part1(&something).answer.to_string(), "3");
         assert_eq!(part2(&something).answer.to_string(), "12");
     }

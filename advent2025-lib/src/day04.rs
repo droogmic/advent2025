@@ -175,6 +175,7 @@ pub fn part2(diagram: &Diagram) -> PartOutput<usize> {
 }
 
 pub const DAY: Day<Diagram, usize, 1, 0, 0> = Day {
+    day: 4,
     title: "Printing Department",
     display: (
         "{answer} rolls of paper can be accessed by a forklift.",
@@ -193,7 +194,8 @@ mod tests {
     use test_log::test;
 
     use super::*;
-    use crate::{Printable as _, get_input};
+    use crate::DayTrait as _;
+    use crate::Printable as _;
 
     #[test]
     fn test_example_part1() {
@@ -214,7 +216,7 @@ mod tests {
     #[test]
     fn test_main() {
         let parse = DAY.calc.parse;
-        let diagram = parse(&get_input(4)).unwrap();
+        let diagram = parse(&DAY.input()).unwrap();
         assert_eq!(part1(&diagram).answer.to_string(), "1451");
         assert_eq!(part2(&diagram).answer.to_string(), "8701");
     }

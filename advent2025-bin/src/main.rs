@@ -1,4 +1,4 @@
-use advent2025_lib::{DayTrait, Part, PrimaryExample, get_days, get_input};
+use advent2025_lib::{DayTrait, Part, PrimaryExample, get_days};
 use clap::{Arg, Command};
 use color_eyre::Report;
 use colored::*;
@@ -53,7 +53,7 @@ fn main() -> Result<(), Report> {
     let example = matches.get_flag("example");
     let days = get_days();
 
-    let get_result_pair = move |day_num: usize, day: &dyn DayTrait| -> (String, String) {
+    let get_result_pair = move |day: &dyn DayTrait| -> (String, String) {
         if example {
             match day.examples() {
                 PrimaryExample::Same(example) => {
@@ -65,29 +65,18 @@ fn main() -> Result<(), Report> {
                 ),
             }
         } else {
-            let input = get_input(day_num);
-            day.both(&input).expect("invalid input")
+            day.both(&day.input()).expect("invalid input")
         }
     };
 
     if all {
         for (day_num, day) in days.into_iter() {
-            print_day(
-                day_num,
-                day.display(),
-                get_result_pair(day_num, day.as_ref()),
-            );
+            print_day(day_num, day.display(), get_result_pair(day.as_ref()));
         }
     } else if parallel {
         let threads = get_days().into_iter().map(|(day_num, day)| {
             println!("Spawn day {}", day_num);
-            std::thread::spawn(move || {
-                (
-                    day_num,
-                    day.display(),
-                    get_result_pair(day_num, day.as_ref()),
-                )
-            })
+            std::thread::spawn(move || (day_num, day.display(), get_result_pair(day.as_ref())))
         });
         std::thread::yield_now();
         std::thread::sleep(std::time::Duration::from_millis(50));
@@ -104,11 +93,7 @@ fn main() -> Result<(), Report> {
             }
             Some(day_num) => (day_num, days.get(&day_num).unwrap()),
         };
-        print_day(
-            day_num,
-            day.display(),
-            get_result_pair(day_num, day.as_ref()),
-        );
+        print_day(day_num, day.display(), get_result_pair(day.as_ref()));
     }
 
     Ok(())

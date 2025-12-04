@@ -126,6 +126,7 @@ pub fn part2(rotations: &Rotations) -> PartOutput<usize> {
 }
 
 pub const DAY: Day<Rotations, usize, 1, 0, 0> = Day {
+    day: 1,
     title: "Secret Entrance",
     display: (
         "The password to open the door is maybe {answer}.",
@@ -144,7 +145,8 @@ mod tests {
     use test_log::test;
 
     use super::*;
-    use crate::{Printable as _, get_input};
+    use crate::DayTrait as _;
+    use crate::Printable as _;
 
     #[test]
     fn test_example_part1() {
@@ -166,7 +168,7 @@ mod tests {
 
     #[test]
     fn test_main() {
-        let something = parse(&get_input(1)).unwrap();
+        let something = parse(&DAY.input()).unwrap();
         assert_eq!(part1(&something).answer.to_string(), "1034");
         assert_eq!(part2(&something).answer.to_string(), "6166");
     }

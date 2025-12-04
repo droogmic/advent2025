@@ -108,6 +108,7 @@ impl Examples<0, 1, 1> {
 }
 
 pub struct Day<D, O, const C: usize, const F: usize, const S: usize> {
+    pub day: usize,
     pub title: &'static str,
     pub display: (&'static str, &'static str),
     pub calc: DayCalc<D, O>,
@@ -211,11 +212,22 @@ impl<D: 'static, O: 'static + std::fmt::Display, const C: usize, const F: usize,
     }
 }
 
-pub trait DayTrait: Printable + Calculable + Send {}
+pub trait DayTrait: Printable + Calculable + Send {
+    /// Reads the input file for the given day.
+    fn input(&self) -> String;
+}
 
 impl<D: 'static, O: 'static + std::fmt::Display, const C: usize, const F: usize, const S: usize>
     DayTrait for Day<D, O, C, F, S>
 {
+    fn input(&self) -> String {
+        match fs::read_to_string(format!("inputs/day{:02}.txt", self.day))
+            .or_else(|_| fs::read_to_string(format!("../inputs/day{:02}.txt", self.day)))
+        {
+            Err(e) => panic!("Err: {}, inputs/day{:02}.txt", e, self.day),
+            Ok(string) => string,
+        }
+    }
 }
 
 pub fn get_days() -> BTreeMap<usize, Box<dyn DayTrait + 'static>> {
@@ -234,16 +246,6 @@ pub fn get_days() -> BTreeMap<usize, Box<dyn DayTrait + 'static>> {
     // days.insert(11, Box::new(day11::DAY));
     // days.insert(12, Box::new(day12::DAY));
     days
-}
-
-/// Reads the input file for the given day.
-pub fn get_input(day: usize) -> String {
-    match fs::read_to_string(format!("inputs/day{:02}.txt", day))
-        .or_else(|_| fs::read_to_string(format!("../inputs/day{:02}.txt", day)))
-    {
-        Err(e) => panic!("Err: {}, inputs/day{:02}.txt", e, day),
-        Ok(string) => string,
-    }
 }
 
 #[macro_export]

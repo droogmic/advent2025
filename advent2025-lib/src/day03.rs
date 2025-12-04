@@ -107,6 +107,7 @@ pub fn part2(banks: &BatteryBanks) -> PartOutput<Joltage> {
 }
 
 pub const DAY: Day<BatteryBanks, Joltage, 1, 0, 0> = Day {
+    day: 3,
     title: "Lobby",
     display: (
         "The total output joltage is: {answer}",
@@ -125,7 +126,8 @@ mod tests {
     use test_log::test;
 
     use super::*;
-    use crate::{Printable as _, get_input};
+    use crate::DayTrait as _;
+    use crate::Printable as _;
 
     #[test]
     fn test_example_part1() {
@@ -143,7 +145,7 @@ mod tests {
 
     #[test]
     fn test_main() {
-        let something = parse(&get_input(3)).unwrap();
+        let something = parse(&DAY.input()).unwrap();
         assert_eq!(part1(&something).answer.to_string(), "17316");
         assert_eq!(part2(&something).answer.to_string(), "171741365473332");
     }

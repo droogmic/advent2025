@@ -114,6 +114,7 @@ pub fn part2(ranges: &Ranges) -> PartOutput<usize> {
 }
 
 pub const DAY: Day<Ranges, usize, 1, 0, 0> = Day {
+    day: 2,
     title: "Gift Shop",
     display: (
         "The sum of all the invalid IDs using old rules is: {answer}",
@@ -132,7 +133,8 @@ mod tests {
     use test_log::test;
 
     use super::*;
-    use crate::{Printable as _, get_input};
+    use crate::DayTrait as _;
+    use crate::Printable as _;
 
     #[test]
     fn test_find_divisors_12() {
@@ -165,7 +167,7 @@ mod tests {
 
     #[test]
     fn test_main() {
-        let ranges = parse(&get_input(2)).unwrap();
+        let ranges = parse(&DAY.input()).unwrap();
         assert_eq!(part1(&ranges).answer.to_string(), "26255179562");
         assert_eq!(part2(&ranges).answer.to_string(), "31680313976");
     }
