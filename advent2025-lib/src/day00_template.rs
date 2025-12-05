@@ -60,14 +60,19 @@ impl FromStr for Something {
     type Err = ParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let lines = s
-            .lines()
+        let lines: Vec<&str> = s.lines().collect();
+        let mut splits = lines.split(|l| l.is_empty());
+        let lines = splits
+            .next()
+            .unwrap()
+            .into_iter()
+            .copied()
             .map(Line::from_str)
             .collect::<Result<Vec<_>, _>>()?;
         let mut map = HashMap::new();
-        for (row, line) in lines.iter().enumerate() {
-            for (col, cell) in line.0.iter().enumerate() {
-                map.insert(RowColPos { row, col }, *cell);
+        for (row, line) in splits.next().unwrap().into_iter().copied().enumerate() {
+            for (col, cell) in line.chars().enumerate() {
+                map.insert(RowColPos { row, col }, Cell(cell));
             }
         }
         Ok(Something { lines, map })
@@ -123,7 +128,7 @@ mod tests {
         let parse = DAY.calc.parse;
         let something = parse(DAY.examples().first()).unwrap();
         let result = part1(&something);
-        assert_eq!(result.unwrap(), 3);
+        assert_eq!(result.unwrap(), 2);
     }
 
     #[test]
