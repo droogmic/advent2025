@@ -1,7 +1,3 @@
-//! Day 0: Template
-//! Find and replace day00_template with dayXX, where XX is the day number.
-//! Find and replace diagram, diagram, line, Line, cell, and Cell.
-
 use std::{
     collections::{HashMap, HashSet},
     str::FromStr,
@@ -178,7 +174,7 @@ mod tests {
     fn test_main() {
         let parse = DAY.calc.parse;
         let diagram = parse(&DAY.input()).unwrap();
-        assert_eq!(part1(&diagram).answer.to_string(), "3");
-        assert_eq!(part2_brute_force(&diagram).answer.to_string(), "12");
+        assert_eq!(part1(&diagram).answer.to_string(), "1546");
+        assert_eq!(part2_counter(&diagram).answer.to_string(), "13883459503480");
     }
 }
